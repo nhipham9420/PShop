@@ -273,12 +273,12 @@ namespace PShop.Data.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Type 1"
+                            Name = "Women"
                         },
                         new
                         {
                             Id = 2,
-                            Name = "Type 2"
+                            Name = "Men"
                         });
                 });
 

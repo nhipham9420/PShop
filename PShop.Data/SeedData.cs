@@ -20,19 +20,9 @@ namespace PShop.Data
 
         public void Seed()
         {
-            //modelBuilder.Entity<IdentityRole>().HasData(
-            //    new IdentityRole() { Id = "1", Name = "Admin", ConcurrencyStamp = "1", NormalizedName = "Admin"},
-            //    new IdentityRole() { Id = "2", Name = "Manager", ConcurrencyStamp = "2", NormalizedName = "Manager"},
-            //    new IdentityRole() { Id = "3", Name = "Customer", ConcurrencyStamp = "3", NormalizedName = "Customer"}
-            //);
-
-            //modelBuilder.Entity<IdentityUserRole<string>>().HasData(  
-            //    new IdentityUserRole<string>() { RoleId = "1", UserId = "1" }  
-            //);  
-
             modelBuilder.Entity<Category>().HasData(
-                   new Category() { Id = 1, Name = "Type 1" },
-                   new Category() { Id = 2, Name = "Type 2" }
+                   new Category() { Id = 1, Name = "Women" },
+                   new Category() { Id = 2, Name = "Men" }
             );
         }
     }

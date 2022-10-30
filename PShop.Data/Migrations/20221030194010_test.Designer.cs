@@ -12,7 +12,7 @@ using PShop.Data;
 namespace PShop.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20221023115102_test")]
+    [Migration("20221030194010_test")]
     partial class test
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -275,12 +275,12 @@ namespace PShop.Data.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Type 1"
+                            Name = "Women"
                         },
                         new
                         {
                             Id = 2,
-                            Name = "Type 2"
+                            Name = "Men"
                         });
                 });
 

@@ -72,7 +72,7 @@ namespace PShopWeb.Controllers
         {
 
 
-            int pageSize = 10;
+            int pageSize = 6;
             int pageNumber = (page ?? 1);
 
             ViewBag.ListCategory = _unitOfWork.Category.GetAll();
