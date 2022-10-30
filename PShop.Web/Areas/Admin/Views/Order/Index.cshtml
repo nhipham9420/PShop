@@ -1,0 +1,228 @@
+﻿@{
+    var status = Context.Request.Query["status"];
+    var inprocess = "text-primary";
+    var completed = "text-primary";
+    var approved = "text-primary";
+    var all = "text-primary";
+
+    switch (status)
+    {
+        case "inprocess":
+            inprocess = "active text-white";
+            break;
+        case "completed":
+            completed = "active text-white";
+            break;
+        case "approved":
+            approved = "active text-white";
+            break;
+        default:
+            all = "active text-white";
+            break;
+    }
+
+}
+
+<div class="p-3 mx-2">
+    <div class="d-flex justify-content-between pt-4">
+        <div class="p-2">
+            <h2 class="text-dark">Order List</h2>
+        </div>
+        <div class="p-2">
+            <ul class="list-group list-group-horizontal-sm">
+                <a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="inprocess">
+                    <li class="list-group-item @inprocess">In Process</li>
+                </a>
+                <a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="completed">
+                    <li class="list-group-item @completed">Completed</li>
+                </a>
+                <a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="approved">
+                    <li class="list-group-item @approved">Approved</li>
+                </a>
+                <a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="all">
+                    <li class="list-group-item @all">All</li>
+                </a>
+            </ul>
+        </div>
+    </div>
+
+    <br />
+
+    <table border="0" cellspacing="5" cellpadding="5">
+        <tbody>
+            <tr>
+                <td><strong>From:</strong></td>
+                <td><input type="text" id="min" name="min"></td>
+            </tr>
+            <tr>
+                <td><strong>To:</strong></td>
+                <td><input type="text" id="max" name="max"></td>
+            </tr>
+        </tbody>
+    </table>
+    <br />
+
+    <table id="tblData" class="table table-bordered table-striped" style="width:100%">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Phone Number</th>
+                <th>Email</th>
+                <th>Order Date</th>
+                <th>Status</th>
+                <th>Total</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr class="text-danger">
+                <th colspan="6" style="text-align:right">Total:</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+@section Scripts{
+<script>
+    var minDate, maxDate;
+
+    // Custom filtering function which will search data in column four between two values
+    $.fn.dataTable.ext.search.push(
+        function (settings, data, dataIndex) {
+
+            let min = moment($('#min').val(), 'DD/MM/YYYY', true).isValid() ?
+                moment($('#min').val(), 'DD/MM/YYYY').format('YYYYMMDD') : "";
+
+            let max = moment($('#max').val(), 'DD/MM/YYYY', true).isValid() ?
+                moment($('#max').val(), 'DD/MM/YYYY').format('YYYYMMDD') : "";
+
+            var date = moment(data[4], 'DD/MM/YYYY').format('YYYYMMDD');
+
+            if (max <= "") {
+                max = "99991231";
+            }
+
+            if (date >= min && date <= max) {
+                return true;
+            }
+            if (moment().format('YYYYMMDD') === date) {
+                return true;
+            }
+
+            return false;
+        }
+    );
+
+    $(document).ready(function () {
+        var url = window.location.search;
+        var status;
+
+        if (url.includes("inprocess")) {
+            status = "inprocess";
+        }
+        else {
+            if (url.includes("completed")) {
+                status = "completed";
+            }
+            else {
+                if (url.includes("approved")) {
+                    status = "approved";
+                }
+                else {
+                    status = "all";
+                }
+            }
+
+        }
+
+        // Create date inputs
+        minDate = new DateTime($('#min'), {
+            format: 'DD/MM/YYYY'
+        });
+        maxDate = new DateTime($('#max'), {
+            format: 'DD/MM/YYYY'
+        });
+
+        // DataTables initialisation
+        var table = $('#tblData').DataTable({
+            "ajax": {
+                "url": "/Admin/Order/GetAll?status=" + status
+            },
+            "columns": [
+                { "data": "id", "width": "5%" },
+                { "data": "name", "width": "20%" },
+                { "data": "phoneNumber", "width": "15%" },
+                { "data": "appUser.email", "width": "15%" },
+                {
+                    "data": "orderDate",
+                    "render": DataTable.render.datetime('DD/MM/YYYY'),
+                    "width": "10%"
+                },
+                { "data": "orderStatus", "width": "15%" },
+                {
+                    "data": "orderTotal",
+                    "render": DataTable.render.number('.', null, 0, null, ' ₫'),
+                    "width": "15%"
+                },
+                {
+                    "data": "id",
+                    "render": function (data) {
+                        return `
+                                <div class="w-75 btn-group" role="group">
+                                <a href="/Admin/Order/Detail?orderId=${data}"
+                                class="btn btn-dark mx-2"> <i class="bi bi-pencil-square"></i></a>
+
+					        </div>
+                                `
+                    },
+                    "width": "5%"
+                }
+            ],
+            //footerCallback: function( tfoot, data, start, end, display ) {
+            //    var api = this.api();
+            //    $(api.column(6).footer()).html(
+            //        api.column(6).data().reduce(function ( a, b ) {
+            //            return a + b;
+            //        }, 0)
+            //    );
+            //},
+            footerCallback: function (row, data, start, end, display) {
+                var api = this.api();
+
+                // Remove the formatting to get integer data for summation
+                var intVal = function (i) {
+                    return typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0;
+                };
+
+                // Total over all pages
+                total = api
+                    .column(6)
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                // Total over this page
+                pageTotal = api
+                    .column(6, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                // Update footer
+                $(api.column(6).footer()).html(pageTotal + '₫ / ' + total + '₫ total');
+            },
+        });
+
+        // Refilter the table
+        $('#min, #max').on('change', function () {
+            table.draw();
+        });
+    });
+
+</script>
+}

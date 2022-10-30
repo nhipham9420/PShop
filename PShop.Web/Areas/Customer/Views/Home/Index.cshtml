@@ -1,0 +1,125 @@
+﻿@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+@using PShop.Models.ViewModels
+@model ProductVM
+
+<header class="bg-dark py-5 mx-4">
+  <div class="container px-4 px-lg-5 my-5">
+    <div class="text-center text-white">
+      <h1 class="display-4 fw-bolder">Shop in style</h1>
+      <p class="lead fw-normal text-white-50 mb-0">With this shop hompeage template</p>
+    </div>
+  </div>
+</header>
+<div class="site-section m-4">
+  <div class="container">
+
+    <div class="row mb-5">
+      <div class="col-md-9 order-2">
+        <div align="right">
+
+          @{
+            int currentPage = Model.ListProducts.PageNumber;
+            int pageSize = Model.ListProducts.PageSize;
+            int totalItem = Model.ListProducts.TotalItemCount;
+
+            if (!Model.ListProducts.IsLastPage)
+            {
+              <p>@((currentPage - 1) * pageSize +1 ) - @(((currentPage - 1) * pageSize) + pageSize) / @totalItem</p>
+            }
+            else
+            {
+              <p>@((currentPage - 1) * pageSize +1 ) - @totalItem / @totalItem</p>
+            }
+          }
+        </div>
+        <div class="row mb-5">
+          @if (Model.ListProducts != null && Model.ListProducts.Count > 0)
+          {
+            @foreach (var product in Model.ListProducts)
+            {
+              <div class="col-sm-6 col-lg-4 mb-4 aos-init aos-animate" data-aos="fade-up">
+                <div class="block-4 text-center border">
+                  <figure class="block-4-image">
+                    <a href="shop-single.html"><img src="@product.ImageUrl" alt="Image placeholder" class="img-fluid"></a>
+                  </figure>
+                  <div class="block-4-text p-4">
+                    <h3><a asp-action="Detail" asp-route-productId="@product.Id"
+                    style="text-decoration:none; color:black">@product.Name</a></h3>
+                    <p class="mb-0 text-muted text-decoration-line-through">@((product.Price + product.Price *
+                  0.5).ToString("C0"))</p>
+                    <p class="text-danger"><strong>@product.Price.ToString("C0")</strong></p>
+                    <form method="post">
+                      <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center">
+                          @* <button type="submit" asp-action="Detail" asp-route-ProductId="@product.Id"
+                            asp-route-Quantity=@(1) value="Add to Cart" class="btn btn-outline-dark flex-shrink-0
+                            form-control" style="height:50px;">
+                            <i class="bi-cart-fill me-1"></i>
+                            Add to Cart
+                            </button>*@
+
+                          <a asp-action="Detail" asp-route-productId="@product.Id"
+                        class="btn btn-outline-dark flex-shrink-0">Detail</a>
+
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            }
+          }
+
+        </div>
+
+        <div class="d-flex justify-content-center align-items-center" style="height:100px;">
+          @Html.PagedListPager(Model.ListProducts, page => Url.Action("Index", "Home",
+          new { Page = page }),
+          new PagedListRenderOptions {
+          LiElementClasses = new string[] { "page-item" },
+          PageClasses = new string[] { "page-link" }
+          })
+        </div>
+
+      </div>
+
+
+
+      <div class="col-md-3 mb-5">
+        <div class="row">
+          <form method="get">
+
+            <p class="mb-2 text-uppercase text-black d-block"><strong>Search</strong></p>
+
+            <input asp-for="SearchString" class="form-control border rounded mb-4" placeholder="Search" />
+
+            <p class="mb-2  text-uppercase text-black d-block"><strong>Categories</strong></p>
+            <select asp-for="CategoryId" asp-items=@(new SelectList(ViewBag.ListCategory,"Id","Name"))
+              class="form-select mb-4">
+              <option selected disabled>Select category</option>
+            </select>
+            <p class="mb-2 text-uppercase text-black d-block"><strong>Sort</strong></p>
+            <select asp-for="SortBy" class="form-select mb-4">
+              <option selected disabled>Sort by</option>
+              <option value="1">A - Z</option>
+              <option value="2">Z - A</option>
+              <option value="3">Low To High</option>
+              <option value="4">High To Low</option>
+            </select>
+
+            <div class="text-center">
+              <button class="btn btn-danger">Apply</button>
+              <a href="@Url.Action("Index", "Home")" class="btn btn-dark flex-shrink-0">
+                Reset
+              </a>
+            </div>
+
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

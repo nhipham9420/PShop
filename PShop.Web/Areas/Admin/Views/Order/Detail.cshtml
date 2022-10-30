@@ -1,0 +1,89 @@
+﻿@model PShop.Models.ViewModels.OrderVM
+@using PShop.Utility
+
+<form method="post">
+  <input asp-for="Order.Id" hidden />
+  <br />
+  <div class="row m-3">
+    <div class="col-md-4 order-md-2 mb-4">
+      <h4 class="mb-3">Detail</h4>
+      <br />
+
+      <ul class="list-group">
+        <li class="list-group-item d-flex justify-content-between">
+          <span>Cart total</span>
+          <strong>@Model.Order.OrderTotal.ToString("C0")</strong>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <span>Shipping</span>
+          <strong>Free</strong>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <span>Promo</span>
+          <strong></strong>
+        </li>
+        <li class="list-group-item d-flex justify-content-between text-success">
+          <span><strong>Total (VNĐ)</strong></span>
+          <strong>@Model.Order.OrderTotal.ToString("C0")</strong>
+        </li>
+      </ul>
+      <br />
+      <strong><label asp-for="Order.OrderStatus"></label></strong>
+      <input asp-for="Order.OrderStatus" type="text" class="form-control" readonly>
+      <br />
+
+      @if (User.IsInRole(ValueStore.RoleAdmin) || User.IsInRole(ValueStore.RoleManager))
+      {
+        if (Model.Order.OrderStatus == ValueStore.StatusApproved)
+        {
+          <input type="submit" asp-action="StartProcessing" class="btn btn-success form-control my-1"
+        value="Start Processing" />
+        }
+        if (Model.Order.OrderStatus == ValueStore.StatusInProcess)
+        {
+          <input type="submit" asp-action="ShipOrder" class="btn btn-success form-control my-1" value="Ship Order" />
+        }
+
+        @if (Model.Order.OrderStatus != ValueStore.StatusRefunded &&
+       Model.Order.OrderStatus != ValueStore.StatusCancelled &&
+       Model.Order.OrderStatus != ValueStore.StatusShipped)
+        {
+          <input type="submit" asp-action="CancelOrder" class="btn btn-danger form-control my-1" value="Cancel Order" />
+        }
+      }
+    </div>
+
+    <div class="col-md-8 order-md-1">
+      <h4 class="mb-3">Billing address</h4>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label asp-for="Order.Name"></label>
+          <input asp-for="Order.Name" type="text" class="form-control">
+        </div>
+        <div class="col-md-6 mb-3">
+          <label asp-for="Order.PhoneNumber"></label>
+          <input asp-for="Order.PhoneNumber" type="text" class="form-control">
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label asp-for="Order.AppUser.Email"></label>
+        <input asp-for="Order.AppUser.Email" type="text" class="form-control">
+      </div>
+
+      <div class="mb-3">
+        <label asp-for="Order.Address"></label>
+        <input asp-for="Order.Address" type="text" class="form-control">
+      </div>
+
+      <div class="col-md-3">
+        <input type="submit" asp-action="UpdateOrderDetail" class="btn btn-dark form-control my-1 "
+          value="Update Order Details" />
+      </div>
+    </div>
+  </div>
+</form>
+
+@section Scripts{
+<partial name="_ValidationScriptsPartial" />
+}

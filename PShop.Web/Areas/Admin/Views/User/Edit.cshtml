@@ -1,0 +1,94 @@
+﻿@model AppUser
+
+<div class="container m-4">
+    <h1>Edit</h1>
+</div>
+<div id="exTab1" class="container m-4">
+    <ul class="nav nav-pills mb-4">
+        <li class="active"><a href="#1a" data-toggle="tab">Edit</a></li>
+        <li class="mx-4"><a href="#2a" data-toggle="tab">Reset password</a></li>
+    </ul>
+
+    <div class="tab-content clearfix">
+        <div class="tab-pane active" id="1a">
+            <h3>Edit User Information</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <form method="post" asp-action="Edit">
+                        <input asp-for="@Model.Id" hidden />
+                        <div asp-validation-summary="All" class="text-danger"></div>
+
+                        <div class="form-group m-4">
+                            <label asp-for="Name"></label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group m-4">
+                            <label asp-for="UserName"></label>
+                            <input asp-for="UserName" class="form-control" />
+                            <span asp-validation-for="UserName" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group m-4">
+                            <label asp-for="Email"></label>
+                            <input asp-for="Email" class="form-control" />
+                            <input asp-for="Email" hidden />
+                        </div>
+                        <div class="form-group m-4">
+                            <label asp-for="RoleId"></label>
+                            <select asp-for="RoleId" asp-items="@Model.RoleList" class="form-select">
+                                <option disabled selected>Select role</option>
+                            </select>
+                        </div>
+                        <div class="form-group m-4">
+                            <label asp-for="PhoneNumber"></label>
+                            <input asp-for="PhoneNumber" class="form-control" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+                        <div class="form-group m-4">
+                            <label asp-for="Address"></label>
+                            <input asp-for="Address" class="form-control" />
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+                        <div class="form-group m-4 row justify-content-center">
+                            <button type="submit" class="btn btn-success col-4 mx-2">Update</button>
+                            <a asp-action="Index" class="btn btn-warning col-4 mx-2">Back to User</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane" id="2a">
+            <h3>Reset Password</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <form method="post" asp-action="ResetPassword">
+                        <input asp-for="@Model.Id" hidden />
+                        <input asp-for="Email" hidden />
+                        <div asp-validation-summary="All" class="text-danger"></div>
+
+                        <div class="form-group m-4">
+                            <label asp-for="Password"></label>
+                            <input asp-for="Password" class="form-control" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group m-4">
+                            <label asp-for="ConfirmPassword"></label>
+                            <input asp-for="ConfirmPassword" class="form-control" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </div>
+                        <div class="form-group m-4 row justify-content-center">
+                            <button type="submit" class="btn btn-success col-4 mx-2">Reset</button>
+                            <a asp-action="Index" class="btn btn-warning col-4 mx-2">Back to User</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>

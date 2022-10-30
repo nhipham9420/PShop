@@ -1,0 +1,45 @@
+﻿@model LoginVM
+@using PShop.Models.ViewModels
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<AppUser> signInManager
+
+
+<h1 class="text-dark pt-4 px-4">Log in</h1>
+<div class="row px-4">
+    <div class="col-md-6">
+        <section>
+            <form asp-controller="Account" asp-action="Login" method="post">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group m-2 pb-2">
+                    <label asp-for="UserName"></label>
+                    <input asp-for="UserName" class="form-control" autocomplete="username" />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+                <div class="form-group m-2 pb-2">
+                    <label asp-for="Password"></label>
+                    <input asp-for="Password" class="form-control" autocomplete="current-password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div>
+                    <div class="checkbox m-2 pb-2">
+                        <label asp-for="RememberMe" class="form-label">
+                            <input class="form-check-input" asp-for="RememberMe" />
+                            @Html.DisplayNameFor(m => m.RememberMe)
+                        </label>
+                    </div>
+                </div>
+                <div class="m-2 pb-2">
+                    <button id="login-submit" type="submit" class="w-100 btn btn-dark">Log in</button>
+                </div>
+                <div class="m-2 pb-2">
+                    <p>
+                        <a asp-action="ForgotPassword">Forgot your password?</a>
+                    </p>
+                    <p>
+                        <a asp-action="Register">Register as a new user</a>
+                    </p>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
