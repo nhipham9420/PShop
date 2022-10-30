@@ -213,8 +213,10 @@
                         return intVal(a) + intVal(b);
                     }, 0);
 
+
+                var numFormat = $.fn.dataTable.render.number( '.', null, 0, null, ' ₫' ).display;
                 // Update footer
-                $(api.column(6).footer()).html(pageTotal + '₫ / ' + total + '₫ total');
+                $(api.column(6).footer()).html(numFormat(pageTotal) + ' / ' + numFormat(total) + ' total');
             },
         });
 
