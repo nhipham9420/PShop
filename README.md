@@ -2,7 +2,7 @@
 
 - .NET Core MVC
 - Entity Framework Core - Code First Approach
-- Repository and Unit of Work Patterns
+- Repository and Unit of Work Pattern
 - Role-based authorization
 - SQL Server
 
